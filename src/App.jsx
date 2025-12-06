@@ -3,7 +3,8 @@ import {
   ArrowRight, CheckCircle, Shield, Menu, X, 
   Search, FileText, Upload, Zap, Lock, Loader2 
 } from 'lucide-react';
-import { Analytics } from "@vercel/analytics/next";
+// NOTE: Vercel Next.js analytics import removed to keep Vite build compatible.
+// If you're running a Next.js app, use: import { Analytics } from "@vercel/analytics/next";
 
 /* --- UPDATED COMPONENT: PILOT ACCESS MODAL WITH FORMSPREE --- */
 const PilotModal = ({ isOpen, onClose }) => {
@@ -135,7 +136,6 @@ const PilotModal = ({ isOpen, onClose }) => {
           </div>
         )}
       </div>
-      <Analytics />
     </div>
   );
 };
