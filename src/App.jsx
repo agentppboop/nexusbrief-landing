@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Analytics } from "@vercel/analytics/next"
 import { 
   ArrowRight, CheckCircle, Shield, Menu, X, 
   Search, FileText, Upload, Zap, Lock, Loader2 
 } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/next";
 
 /* --- UPDATED COMPONENT: PILOT ACCESS MODAL WITH FORMSPREE --- */
 const PilotModal = ({ isOpen, onClose }) => {
@@ -135,6 +135,7 @@ const PilotModal = ({ isOpen, onClose }) => {
           </div>
         )}
       </div>
+      <Analytics />
     </div>
   );
 };
