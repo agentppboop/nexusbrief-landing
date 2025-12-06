@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/next"
 import { 
   ArrowRight, CheckCircle, Shield, Menu, X, 
   Search, FileText, Upload, Zap, Lock, Loader2 
