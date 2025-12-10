@@ -1,3 +1,4 @@
+// Version 2.0 - Pilot Update
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, CheckCircle, Shield, Menu, X, 
