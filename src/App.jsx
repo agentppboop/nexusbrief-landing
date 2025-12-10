@@ -11,9 +11,10 @@ const PilotModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submittedProblem, setSubmittedProblem] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // YOUR FORMSPREE ID GOES HERE
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xkqjwpqk"; // Replace with your actual ID
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xeoyzbpj"; // Replace with your actual ID
 
   useEffect(() => {
     if (isOpen) {
@@ -27,14 +28,15 @@ const PilotModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+    setErrorMessage('');
+
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
 
     try {
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
       });
 
@@ -42,14 +44,24 @@ const PilotModal = ({ isOpen, onClose }) => {
         // store the submitted problem statement in component state for the success screen
         setSubmittedProblem(data.problem_statement || '');
         setLoading(false);
-        setStep(2); 
+        setStep(2);
       } else {
-        alert("Something went wrong. Please try again.");
+        // try to parse JSON error message from Formspree
+        let msg = `Submission failed (${response.status})`;
+        try {
+          const json = await response.json();
+          if (json?.error) msg = json.error;
+          else if (json?.errors) msg = Array.isArray(json.errors) ? json.errors.map(e => e.message || e).join(', ') : String(json.errors);
+          else if (json?.message) msg = json.message;
+        } catch (parseErr) {
+          // ignore parse error and use default message
+        }
+        setErrorMessage(msg);
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Network error.");
+      console.error('Network error posting to Formspree:', error);
+      setErrorMessage('Network error. Check your connection or try again.');
       setLoading(false);
     }
   };
@@ -121,6 +133,9 @@ const PilotModal = ({ isOpen, onClose }) => {
                 <button type="submit" disabled={loading} className="w-full bg-black text-white py-4 text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                   {loading ? <Loader2 className="animate-spin" size={16} /> : "Submit Application"}
                 </button>
+                {errorMessage && (
+                  <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
+                )}
               </div>
             </form>
           </>
