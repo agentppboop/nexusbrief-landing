@@ -6,13 +6,14 @@ import {
 // NOTE: Vercel Next.js analytics import removed to keep Vite build compatible.
 // If you're running a Next.js app, use: import { Analytics } from "@vercel/analytics/next";
 
-/* --- UPDATED COMPONENT: PILOT ACCESS MODAL WITH FORMSPREE --- */
+/* --- UPDATED COMPONENT: PILOT ACCESS MODAL (EXPANDED) --- */
 const PilotModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [submittedProblem, setSubmittedProblem] = useState('');
 
-  // YOUR FORMSPREE ID GOES HERE (Replace this!)
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xeoyzbpj";
+  // YOUR FORMSPREE ID GOES HERE
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xkqjwpqk"; // Replace with your actual ID
 
   useEffect(() => {
     if (isOpen) {
@@ -27,22 +28,19 @@ const PilotModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     setLoading(true);
     
-    // 1. Capture the form data
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
 
     try {
-      // 2. Send to Formspree
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
 
       if (response.ok) {
-        // 3. If successful, show success screen
+        // store the submitted problem statement in component state for the success screen
+        setSubmittedProblem(data.problem_statement || '');
         setLoading(false);
         setStep(2); 
       } else {
@@ -58,64 +56,72 @@ const PilotModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
-        onClick={onClose}
-      ></div>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
 
-      <div className="relative bg-[#EBE8E3] w-full max-w-md p-8 shadow-2xl border border-white/20 animate-fade-in-up">
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors"
-        >
+      <div className="relative bg-[#EBE8E3] w-full max-w-lg p-8 shadow-2xl border border-white/20 animate-fade-in-up max-h-[90vh] overflow-y-auto">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors">
           <X size={20} />
         </button>
 
         {step === 1 ? (
           <>
-            <div className="mb-8">
-              <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Pilot Program</span>
+            <div className="mb-6">
+              <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Pilot Application</span>
               <h2 className="text-3xl font-serif mt-2 mb-2">Request Access</h2>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Join the exclusive pilot for mid-size law firms. We are currently accepting 5 partners for Q1.
+                Tell us about your practice. We customize every pilot instance.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Work Email</label>
-                <input 
-                  type="email" 
-                  name="email"
-                  required
-                  placeholder="name@lawfirm.com"
-                  className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all"
-                />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Row 1: Name & Role */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Full Name</label>
+                  <input type="text" name="name" required placeholder="John Doe" className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Role / Title</label>
+                  <input type="text" name="role" required placeholder="Partner / Associate" className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all" />
+                </div>
               </div>
-              
+
+              {/* Row 2: Firm & Email */}
+              <div className="grid grid-cols-2 gap-4">
+                 <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Firm Name</label>
+                  <input type="text" name="firm_name" required placeholder="K&P Partners" className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Work Email</label>
+                  <input type="email" name="email" required placeholder="name@firm.com" className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all" />
+                </div>
+              </div>
+
+              {/* Row 3: WhatsApp */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Firm / Organization</label>
-                <input 
-                  type="text" 
-                  name="firm_name"
-                  required
-                  placeholder="Ex: K&P Partners"
-                  className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all"
-                />
+                <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">WhatsApp Number</label>
+                <input type="tel" name="whatsapp" placeholder="+91 98765 43210" className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all" />
+                <p className="text-[10px] text-gray-400 mt-1">Used only for urgent onboarding coordination.</p>
+              </div>
+
+              {/* Row 4: Problem Statement (Text Area) */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">What problem are you trying to solve?</label>
+                <textarea 
+                  name="problem_statement" 
+                  required 
+                  rows="3"
+                  placeholder="E.g., Reviewing 50+ vendor contracts a month manually takes too much time..." 
+                  className="w-full bg-white px-4 py-3 text-sm border border-transparent focus:border-black focus:ring-0 outline-none placeholder:text-gray-300 transition-all resize-none"
+                ></textarea>
               </div>
 
               <div className="pt-2">
-                <button 
-                  type="submit" 
-                  disabled={loading}
-                  className="w-full bg-black text-white py-4 text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
-                >
+                <button type="submit" disabled={loading} className="w-full bg-black text-white py-4 text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                   {loading ? <Loader2 className="animate-spin" size={16} /> : "Submit Application"}
                 </button>
               </div>
-              <p className="text-center text-xs text-gray-400">
-                Your data is processed securely under NDAs.
-              </p>
             </form>
           </>
         ) : (
@@ -125,12 +131,9 @@ const PilotModal = ({ isOpen, onClose }) => {
             </div>
             <h3 className="text-2xl font-serif mb-4">Request Received</h3>
             <p className="text-gray-500 text-sm mb-8 leading-relaxed">
-              Thank you for your interest. Our onboarding team will review your firm's profile and contact you within 24 hours.
+              Thank you. Our team will review your requirements {submittedProblem ? `("${submittedProblem.slice(0, 30)}${submittedProblem.length > 30 ? '...' : ''}")` : ''} and contact you within 24 hours.
             </p>
-            <button 
-              onClick={onClose}
-              className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity"
-            >
+            <button onClick={onClose} className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity">
               Back to Site
             </button>
           </div>
