@@ -356,8 +356,8 @@ export default function NexusBriefEditorial() {
         <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20">
            <div>
               <div className="uppercase tracking-widest text-xs font-bold mb-8 opacity-60">Our Vision</div>
-              <div className="w-24 h-32 bg-gray-300 mb-8 overflow-hidden">
-                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300" className="w-full h-full object-cover grayscale" />
+              <div className="w-40 h-48 bg-gray-300 mb-8 overflow-hidden">
+                 <img src="/ishan_photo.jpeg" className="w-full h-full object-cover grayscale" />
               </div>
               <h2 className="text-3xl font-serif italic leading-relaxed mb-6">
                  "We are building the intelligence layer for Indian law. A system that understands context, not just keywords."
